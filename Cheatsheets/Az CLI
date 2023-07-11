@@ -1,0 +1,66 @@
+## Az Cli cheatsheet
+
+
+
+
+##Create a template spec in azure
+
+az ts create -n logicapp_modules -g templates-rg -l eastus -f "C:\Users\Documents\Work Stuff\AAD_AppReg_Cred_Expiry_LogicApp\v6 with modules\main.bicep" -v 1.0
+
+##RG deployment
+
+az deployment group create -g "logicapp_nosecretinout_test-rg" -f "C:\Users\Work Stuff\AAD_AppReg_Cred_Expiry_LogicApp\v6 with modules\main.bicep"
+
+##Subscription Deployment
+
+az deployment create  -f "C:\Users\Work Stuff\AAD_AppReg_Cred_Expiry_LogicApp\UserMI_roleassignment\mainroleassign.bicep" -l eastus
+
+
+## Check what-if with verbose explanation
+az deployment group what-if \
+  --resource-group ToyStorage \
+  --template-file $templateFile \
+  --result-format FullResourcePayloads
+
+## Check only for resource IDs
+az deployment group what-if \
+  --resource-group ToyStorage \
+  --template-file $templateFile \
+  --result-format ResourceIdOnly
+
+  ## MG Scope deployment
+
+  az deployment mg create
+
+  ## Tenant scope deployment
+
+  az deployment tenant create
+
+  ## Add today's date to deployment name to make it unique
+  templateFile="main.bicep"
+today=$(date +"%d-%b-%Y")
+deploymentName="sub-scope-"$today
+
+az deployment sub create \
+    --name $deploymentName \
+    --location westus \
+    --template-file $templateFile
+
+## Publish bicep module to acr
+
+az bicep publish \
+   --file module.bicep \
+   --target 'br:toycompany.azurecr.io/mymodules/modulename:moduleversion'
+
+   ## az cli RG delete
+
+az group delete --resource-group ToyWebsite --yes --no-wait
+
+## az set subscription
+az account set --subscription "52b17dc1-6d20-470e-bd08-6f6879bcae9e"
+
+## Show current default subscription as a list
+az account list --query "[?isDefault]"
+
+## whatif to check deployment
+az deployment group what-if -g function-rg -f "C:\Users\Documents\Work Stuff\Bicep\Basics\array_variable.bicep"
